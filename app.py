@@ -1,4 +1,4 @@
-from  flask import Flask, jsonify, request
+from flask import Flask, jsonify, request, render_template_string
 from google import genai
 import requests
 from bs4 import BeautifulSoup
@@ -75,3 +75,97 @@ def summarize_url():
 
 if __name__ == "__main__":
     app.run(debug=True)
+
+@app.route("/")
+def home():
+    return render_template_string("""
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Summarizer App</title>
+</head>
+<body>
+    <h1>Summarizer App</h1>
+    <form action="/summarize" method="post" enctype="multipart/form-data">
+        <label for="option">Choose input type:</label>
+        <select name="option" id="option">
+            <option value="pdf">PDF</option>
+            <option value="url">URL</option>
+        </select><br><br>
+        <div id="pdf_input">
+            <label for="file">Choose PDF file:</label>
+            <input type="file" name="file" accept=".pdf"><br><br>
+        </div>
+        <div id="url_input" style="display:none;">
+            <label for="url">Enter URL:</label>
+            <input type="text" name="url"><br><br>
+        </div>
+        <input type="submit" value="Summarize">
+    </form>
+    <script>
+        document.getElementById('option').addEventListener('change', function() {
+            var option = this.value;
+            if (option === 'pdf') {
+                document.getElementById('pdf_input').style.display = 'block';
+                document.getElementById('url_input').style.display = 'none';
+            } else {
+                document.getElementById('pdf_input').style.display = 'none';
+                document.getElementById('url_input').style.display = 'block';
+            }
+        });
+    </script>
+</body>
+</html>
+""")
+
+@app.route("/summarize", methods=["POST"])
+def summarize():
+    option = request.form.get('option')
+    if option == 'pdf':
+        if 'file' not in request.files:
+            return "No file provided", 400
+        file = request.files['file']
+        if file.filename == '':
+            return "No file selected", 400
+        try:
+            pdf_text = extract_text_from_pdf(io.BytesIO(file.read()))
+            summary = summarize_text(pdf_text)
+            return render_template_string("""
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Summary</title>
+</head>
+<body>
+    <h1>Summary</h1>
+    <p>{{ summary }}</p>
+    <a href="/">Back</a>
+</body>
+</html>
+""", summary=summary)
+        except Exception as e:
+            return f"Error: {str(e)}", 500
+    elif option == 'url':
+        url = request.form.get('url')
+        if not url:
+            return "No URL provided", 400
+        try:
+            text = extract_text_from_url(url)
+            summary = summarize_text(text)
+            return render_template_string("""
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Summary</title>
+</head>
+<body>
+    <h1>Summary</h1>
+    <p>{{ summary }}</p>
+    <a href="/">Back</a>
+</body>
+</html>
+""", summary=summary)
+        except Exception as e:
+            return f"Error: {str(e)}", 500
+    else:
+        return "Invalid option", 400
