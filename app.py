@@ -83,25 +83,73 @@ def home():
 <html>
 <head>
     <title>Summarizer App</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        .container {
+            background-color: white;
+            padding: 40px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            width: 400px;
+            text-align: center;
+        }
+        h1 {
+            color: #333;
+            margin-bottom: 20px;
+        }
+        label {
+            display: block;
+            margin-bottom: 10px;
+            color: #555;
+        }
+        select, input[type="file"], input[type="text"], input[type="submit"] {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 20px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+        input[type="submit"] {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+        input[type="submit"]:hover {
+            background-color: #45a049;
+        }
+    </style>
 </head>
 <body>
-    <h1>Summarizer App</h1>
-    <form action="/summarize" method="post" enctype="multipart/form-data">
-        <label for="option">Choose input type:</label>
-        <select name="option" id="option">
-            <option value="pdf">PDF</option>
-            <option value="url">URL</option>
-        </select><br><br>
-        <div id="pdf_input">
-            <label for="file">Choose PDF file:</label>
-            <input type="file" name="file" accept=".pdf"><br><br>
-        </div>
-        <div id="url_input" style="display:none;">
-            <label for="url">Enter URL:</label>
-            <input type="text" name="url"><br><br>
-        </div>
-        <input type="submit" value="Summarize">
-    </form>
+    <div class="container">
+        <h1>Summarizer App</h1>
+        <form action="/summarize" method="post" enctype="multipart/form-data">
+            <label for="option">Choose input type:</label>
+            <select name="option" id="option">
+                <option value="pdf">PDF</option>
+                <option value="url">URL</option>
+            </select><br><br>
+            <div id="pdf_input">
+                <label for="file">Choose PDF file:</label>
+                <input type="file" name="file" accept=".pdf"><br><br>
+            </div>
+            <div id="url_input" style="display:none;">
+                <label for="url">Enter URL:</label>
+                <input type="text" name="url"><br><br>
+            </div>
+            <input type="submit" value="Summarize">
+        </form>
+    </div>
     <script>
         document.getElementById('option').addEventListener('change', function() {
             var option = this.value;
@@ -135,11 +183,53 @@ def summarize():
 <html>
 <head>
     <title>Summary</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        .container {
+            background-color: white;
+            padding: 40px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            width: 600px;
+            text-align: center;
+        }
+        h1 {
+            color: #333;
+            margin-bottom: 20px;
+        }
+        p {
+            color: #555;
+            line-height: 1.6;
+            margin-bottom: 20px;
+        }
+        a {
+            display: inline-block;
+            padding: 10px 20px;
+            background-color: #4CAF50;
+            color: white;
+            text-decoration: none;
+            border-radius: 4px;
+        }
+        a:hover {
+            background-color: #45a049;
+        }
+    </style>
 </head>
 <body>
-    <h1>Summary</h1>
-    <p>{{ summary }}</p>
-    <a href="/">Back</a>
+    <div class="container">
+        <h1>Summary</h1>
+        <p>{{ summary }}</p>
+        <a href="/">Back</a>
+    </div>
 </body>
 </html>
 """, summary=summary)
@@ -157,11 +247,53 @@ def summarize():
 <html>
 <head>
     <title>Summary</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        .container {
+            background-color: white;
+            padding: 40px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            width: 600px;
+            text-align: center;
+        }
+        h1 {
+            color: #333;
+            margin-bottom: 20px;
+        }
+        p {
+            color: #555;
+            line-height: 1.6;
+            margin-bottom: 20px;
+        }
+        a {
+            display: inline-block;
+            padding: 10px 20px;
+            background-color: #4CAF50;
+            color: white;
+            text-decoration: none;
+            border-radius: 4px;
+        }
+        a:hover {
+            background-color: #45a049;
+        }
+    </style>
 </head>
 <body>
-    <h1>Summary</h1>
-    <p>{{ summary }}</p>
-    <a href="/">Back</a>
+    <div class="container">
+        <h1>Summary</h1>
+        <p>{{ summary }}</p>
+        <a href="/">Back</a>
+    </div>
 </body>
 </html>
 """, summary=summary)
