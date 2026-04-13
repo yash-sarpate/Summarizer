@@ -1,5 +1,5 @@
 from flask import Flask, jsonify, request, render_template_string
-import openai
+from openai import OpenAI
 import requests
 from bs4 import BeautifulSoup
 import os
@@ -9,14 +9,16 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
-openai.api_key = os.getenv("OPENAI_API_KEY")
-if not openai.api_key:
+openai_api_key = os.getenv("OPENAI_API_KEY")
+if not openai_api_key:
     raise ValueError("OPENAI_API_KEY is not set in environment")
+
+client = OpenAI(api_key=openai_api_key)
 
 app = Flask(__name__)
 
 
-# for model in openai.Model.list():
+# for model in client.models.list():
 #     print(model)
 
 def extract_text_from_pdf(pdf_file):
@@ -45,7 +47,7 @@ def extract_text_from_url(url):
 def summarize_text(text, max_length=150):
     prompt = f"Summarize the following text in about {max_length} words or less:\n\n{text}"
     try:
-        response = openai.ChatCompletion.create(
+        response = client.chat.completions.create(
             model="gpt-3.5-turbo",
             messages=[{"role": "user", "content": prompt}],
             max_tokens=300,
