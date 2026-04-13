@@ -69,7 +69,7 @@ def summarize_pdf():
     except Exception as e:
         return jsonify({"error": str(e)}), 500
 
-app.route("/api/url", methods=['POST'])
+@app.route("/api/url", methods=['POST'])
 def summarize_url():
     data = request.get_json()
     url = data.get('url')
