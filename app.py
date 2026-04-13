@@ -1,18 +1,22 @@
 from flask import Flask, jsonify, request, render_template_string
-from google import genai
+import openai
 import requests
 from bs4 import BeautifulSoup
 import os
 import io
 import pymupdf 
+from dotenv import load_dotenv
+
+load_dotenv()
+
+openai.api_key = os.getenv("OPENAI_API_KEY")
+if not openai.api_key:
+    raise ValueError("OPENAI_API_KEY is not set in environment")
 
 app = Flask(__name__)
 
-# Configure Gemini API key
-Client = genai.Client(api_key=os.environ.get('GEMINI_API_KEY'))
 
-
-# for model in genai.list_models():
+# for model in openai.Model.list():
 #     print(model)
 
 def extract_text_from_pdf(pdf_file):
@@ -39,10 +43,15 @@ def extract_text_from_url(url):
         return f"Error fetching URL: {e}"
     
 def summarize_text(text, max_length=150):
-    prompt = f"Summarize the following text in about {max_length} words or less: {text}"
+    prompt = f"Summarize the following text in about {max_length} words or less:\n\n{text}"
     try:
-        response = Client.models.generate_content(model="gemini-1.5-flash", contents=prompt)
-        return response.text
+        response = openai.ChatCompletion.create(
+            model="gpt-3.5-turbo",
+            messages=[{"role": "user", "content": prompt}],
+            max_tokens=300,
+            temperature=0.7,
+        )
+        return response.choices[0].message["content"].strip()
     except Exception as e:
         return f"Error generating summary: {e}"
     
