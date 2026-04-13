@@ -53,7 +53,7 @@ def summarize_text(text, max_length=150):
             max_tokens=300,
             temperature=0.7,
         )
-        return response.choices[0].message["content"].strip()
+        return response.choices[0].message.content.strip()
     except Exception as e:
         return f"Error generating summary: {e}"
     
